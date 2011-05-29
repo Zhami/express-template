@@ -3,23 +3,29 @@ require('../common')
 var test = microtest.module('app/index.js')
 
 test.context.__dirname = test.object('dirname')
+test.context.process   = { pid : 'PID' }
 
 test.requires('express')
 test.requires('mongoose')
 test.requires('path')
 test.requires('connect-redis', { class: 'RedisStore' })
 test.requires('./common', [{ class: 'setup' }, { name: 'common' }, { class: 'Base' }, { class: 'BaseRequest' }])
+test.requires('net')
+test.requires('repl')
 
 var APP         = test.object('app')
   , VIEWS_PATH  = test.object('views_path')
   , PUBLIC_PATH = test.object('public_path')
+  , REPL_PATH   = 'REPL_PATH'
   , ALL_CB, DEV_CB, PROD_CB
 
 APP.router = test.object('router')
 
 test.describe('bootstrap', function () {
-  var PATH_JOIN = test.object('path_join')
-    , configure_call
+  var PATH_JOIN   = test.object('path_join')
+    , REPL_SERVER = test.object('repl_server')
+    , configure_call, create_server_call
+    , REPL_CB
 
   test.expect(test.required.express, 'createServer', 1, [], APP)
 
@@ -29,12 +35,18 @@ test.describe('bootstrap', function () {
   test.expect(test.required.path, 'join', 1, [test.context.__dirname, '..', 'public'], PATH_JOIN)
   test.expect(test.required.path, 'resolve', 1, [PATH_JOIN], PUBLIC_PATH)
 
+  test.expect(test.required.path, 'join', 1, [test.context.__dirname, '..', 'repl'], PATH_JOIN)
+  test.expect(test.required.path, 'resolve', 1, [PATH_JOIN], REPL_PATH)
+
   configure_call = test.expect(APP, 'configure', 3)
 
   test.expect(test.required.setup, 1, [test.context.__dirname])
 
   test.requires('./routes', { class: 'routes' })
   test.expect(test.required.routes, 1, [APP])
+
+  create_server_call = test.expect(test.required.net, 'createServer', 1, null, REPL_SERVER)
+  test.expect(REPL_SERVER, 'listen', 1, [REPL_PATH + '/' + test.context.process.pid + '.sock'])
 
   assert.equal(APP, test.compile())
 
@@ -51,6 +63,26 @@ test.describe('bootstrap', function () {
   assert.equal(2, args.length)
   assert.equal('production', args[0])
   PROD_CB = args[1]
+
+  args = create_server_call.calls[0].args
+  assert.equal(1, args.length)
+
+  REPL_CB = args[0]
+
+  test.describe('repl server', function () {
+    var SOCKET = test.object('socket')
+      , REPL   = test.object('repl')
+
+    test.expect
+      ( test.required.repl
+      , 'start'
+      , 1
+      , ['express-' + test.context.process.pid + '> ', SOCKET]
+      , REPL
+      )
+
+    REPL_CB(SOCKET)
+  })
 })
 
 test.describe('setTitle', function () {
@@ -167,3 +199,4 @@ test.describe('prod configure', function () {
     , args[0]
     )
 })
+
