@@ -26,9 +26,9 @@ app.configure(function(){
 
   app.use(require('stylus').middleware({ src: PUBLIC_PATH }))
 
-  app.use(app.router)
-
   app.use(express.static(PUBLIC_PATH))
+
+  app.use(app.router)
 })
 
 app.configure('development', function(){

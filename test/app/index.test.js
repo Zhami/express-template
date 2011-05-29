@@ -73,6 +73,8 @@ test.describe('bootstrap', function () {
     var SOCKET = test.object('socket')
       , REPL   = test.object('repl')
 
+    REPL.context = test.object('context')
+
     test.expect
       ( test.required.repl
       , 'start'
@@ -116,9 +118,10 @@ test.describe('all configure', function () {
   stylus_call = test.expect(test.required.stylus, 'middleware', 1, null, PLUGIN)
   test.expect(APP, 'use', 1, [PLUGIN])
 
-  test.expect(APP, 'use', 1, [APP.router])
   test.expect(test.required.express, 'static', 1, [PUBLIC_PATH], PLUGIN)
   test.expect(APP, 'use', 1, [PLUGIN])
+
+  test.expect(APP, 'use', 1, [APP.router])
 
   ALL_CB()
 
