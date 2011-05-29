@@ -11,4 +11,7 @@
   , "cluster"          : ">=0.6.2"
   , "microtest"        : ">=0.2.3"
   }
+, "scripts"            :
+  { "test"             : "node-far test/ \".*\\.test\\.js$\""
+  }
 }
