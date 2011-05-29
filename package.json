@@ -10,6 +10,8 @@
   , "express-mongoose" : ">=0.0.2"
   , "cluster"          : ">=0.6.2"
   , "microtest"        : ">=0.2.3"
+  , "jade"             : ">=0.11.0"
+  , "stylus"           : ">=0.13.0"
   }
 , "scripts"            :
   { "test"             : "node-far test/ \".*\\.test\\.js$\""
