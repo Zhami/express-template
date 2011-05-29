@@ -77,14 +77,11 @@ common.BaseRequest.prototype.setTitle = function (title) {
 require('./routes')(app)
 
 // REPL
-var repl_context =
-  { common   : common
-  , mongoose : mongoose
-  , app      : app
-  }
+var repl_server = net.createServer(function (socket) {
+  var r = repl.start('express-' + process.pid + '> ', socket)
 
-net.createServer(function (socket) {
-  var repl_instance = repl.start('express-' + process.pid + '> ', socket)
+  r.context.common   = common
+  r.context.app      = app
+  r.context.mongoose = mongoose
 
-  repl_instance.context = repl_context
 }).listen(REPL_PATH + '/' + process.pid + '.sock')
