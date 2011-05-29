@@ -36,7 +36,7 @@ exports.setup = function (app, dirname) {
 var NotFoundError = function NotFoundError (path) {
   Error.call(this)
 
-  this.name = 'NotFoundError'
+  this.name = 'Not Found'
   this.code = 404
 
   if (path) {
@@ -55,7 +55,7 @@ exports.NotFoundError = NotFoundError
 var ApplicationError = function ApplicationError (message) {
   Error.call(this)
 
-  this.name = 'ApplicationError'
+  this.name = 'Application Error'
   this.code = 500
 
   this.message = message || 'An application error has occured.'
