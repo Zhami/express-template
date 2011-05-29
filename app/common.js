@@ -9,3 +9,14 @@ exports.setup = function (app, dirname) {
   exports.loadController = aid.loadController
 }
 
+var NotFoundError = function NotFoundError (message) {
+  this.name = 'NotFound'
+  this.code = 404
+
+  Error.call(this, message)
+  Error.captureStackTrace(this, arguments.callee)
+}
+
+NotFoundError.prototype.__proto__ = Error.prototype
+
+exports.NotFoundError = NotFoundError
