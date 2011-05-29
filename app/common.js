@@ -34,14 +34,17 @@ exports.setup = function (app, dirname) {
 }
 
 var NotFoundError = function NotFoundError (path) {
+  Error.call(this)
+
   this.name = 'NotFoundError'
   this.code = 404
 
   if (path) {
-    Error.call(this, '"' + path + '" could not be found.')
+    this.message = '"' + path + '" could not be found.'
   } else {
-    Error.call(this, 'Page not found')
+    this.message = 'Page not found'
   }
+
   Error.captureStackTrace(this, arguments.callee)
 }
 
@@ -50,13 +53,17 @@ NotFoundError.prototype.__proto__ = Error.prototype
 exports.NotFoundError = NotFoundError
 
 var ApplicationError = function ApplicationError (message) {
+  Error.call(this)
+
   this.name = 'ApplicationError'
   this.code = 500
 
-  Error.call(this, message || 'An application error has occured.')
+  this.message = message || 'An application error has occured.'
+
   Error.captureStackTrace(this, arguments.callee)
 }
 
 ApplicationError.prototype.__proto__ = Error.prototype
 
 exports.ApplicationError = ApplicationError
+
