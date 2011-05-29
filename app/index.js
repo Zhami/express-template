@@ -4,12 +4,15 @@ var express    = require('express')
   , path       = require('path')
   , RedisStore = require('connect-redis')
   , common     = require('./common')
+  , net        = require('net')
+  , repl       = require('repl')
 
 require('express-mongoose')
 
 var app         = module.exports = express.createServer()
   , VIEWS_PATH  = path.resolve(path.join(__dirname, '..', 'views'))
   , PUBLIC_PATH = path.resolve(path.join(__dirname, '..', 'public'))
+  , REPL_PATH   = path.resolve(path.join(__dirname, '..', 'repl'))
 
 // Configuration
 app.configure(function(){
@@ -72,3 +75,16 @@ common.BaseRequest.prototype.setTitle = function (title) {
 
 // Routes
 require('./routes')(app)
+
+// REPL
+var repl_context =
+  { common   : common
+  , mongoose : mongoose
+  , app      : app
+  }
+
+net.createServer(function (socket) {
+  var repl_instance = repl.start('express-' + process.pid + '> ', socket)
+
+  repl_instance.context = repl_context
+}).listen(REPL_PATH + '/' + process.pid + '.sock')
