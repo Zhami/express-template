@@ -1,2 +1,5 @@
 h1 #{error.code} - #{error.name}
 p= error.message
+  - if (error.stack)
+    p
+      pre= error.stack

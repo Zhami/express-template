@@ -36,8 +36,6 @@ app.configure('development', function(){
   app.use(express.cookieParser())
   app.use(express.session({ secret: 'test', store: redis_store }))
 
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })) 
-
   // Local mongoose server
   mongoose.connect('mongodb://localhost/test')
 })
@@ -47,8 +45,6 @@ app.configure('production', function(){
 
   app.use(express.cookieParser())
   app.use(express.session({ secret: 'test', store: redis_store }))
-
-  app.use(express.errorHandler()) 
 
   // Local mongoose server
   mongoose.connect('mongodb://localhost/test')

@@ -122,7 +122,7 @@ test.describe('all configure', function () {
 test.describe('dev configure', function () {
   var PLUGIN      = test.object('plugin')
     , REDIS_STORE = test.object('redis_store')
-    , session_call, error_handler_call, args
+    , session_call, args
 
   test.expect('new', test.required.RedisStore, 1, [], REDIS_STORE)
 
@@ -130,9 +130,6 @@ test.describe('dev configure', function () {
   test.expect(APP, 'use', 1, [PLUGIN])
 
   session_call = test.expect(test.required.express, 'session', 1, null, PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-
-  error_handler_call = test.expect(test.required.express, 'errorHandler', 1, null, PLUGIN)
   test.expect(APP, 'use', 1, [PLUGIN])
 
   test.expect(test.required.mongoose, 'connect', 1, ['mongodb://localhost/test'])
@@ -147,21 +144,12 @@ test.describe('dev configure', function () {
       }
     , args[0]
     )
-
-  args = error_handler_call.calls[0].args
-  assert.equal(1, args.length)
-  assert.deepEqual
-    ( { dumpExceptions : true
-      , showStack      : true
-      }
-    , args[0]
-    )
 })
 
 test.describe('prod configure', function () {
   var PLUGIN      = test.object('plugin')
     , REDIS_STORE = test.object('redis_store')
-    , session_call, error_handler_call, args
+    , session_call, args
 
   test.expect('new', test.required.RedisStore, 1, [], REDIS_STORE)
 
@@ -169,9 +157,6 @@ test.describe('prod configure', function () {
   test.expect(APP, 'use', 1, [PLUGIN])
 
   session_call = test.expect(test.required.express, 'session', 1, null, PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-
-  test.expect(test.required.express, 'errorHandler', 1, [], PLUGIN)
   test.expect(APP, 'use', 1, [PLUGIN])
 
   test.expect(test.required.mongoose, 'connect', 1, ['mongodb://localhost/test'])
