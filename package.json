@@ -15,5 +15,6 @@
   }
 , "scripts"            :
   { "test"             : "node-far test/ \".*\\.test\\.js$\""
+  , "install"          : "mkdir -p logs pids repl"
   }
 }
