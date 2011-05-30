@@ -1,0 +1,28 @@
+express-template
+================
+
+Here is a basic template to get started writing reasonably well featured web app.
+
+Comes with:
+
+- Basic controllers
+- Enhanced error handling over `errorHandler` middleware
+- `mongoose` as a Mongo DB ORM
+- Express sessions
+- Cluster
+- REPL servers for each worker ready for awesome socat action
+- `microtest` and almost full test coverage; up to you to keep test coverage high
+
+You will need
+
+- A redis server
+- A mongo server if working with models
+
+To get started
+
+    npm install
+    path/to/redis-server
+    path/to/mongod
+    node server.js
+
+Then you can hack away at the code.
