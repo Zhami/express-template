@@ -11,6 +11,7 @@ test.requires('path')
 test.requires('connect-redis', { class: 'RedisStore' })
 test.requires('net')
 test.requires('repl')
+test.requires('fs')
 
 var APP         = test.object('app')
   , VIEWS_PATH  = test.object('views_path')
@@ -187,4 +188,5 @@ test.describe('prod configure', function () {
     , args[0]
     )
 })
+
 

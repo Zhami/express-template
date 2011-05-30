@@ -5,6 +5,7 @@ var express    = require('express')
   , RedisStore = require('connect-redis')
   , net        = require('net')
   , repl       = require('repl')
+  , fs         = require('fs')
 
 require('express-mongoose')
 
