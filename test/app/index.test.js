@@ -13,8 +13,8 @@ test.requires('net')
 test.requires('repl')
 
 var APP         = test.object('app')
-  , VIEWS_PATH  = test.object('views_path')
-  , PUBLIC_PATH = test.object('public_path')
+  , VIEWS_PATH  = 'VIEWS_PATH'
+  , PUBLIC_PATH = 'PUBLIC_PATH'
   , REPL_PATH   = 'REPL_PATH'
   , ALL_CB, DEV_CB, PROD_CB
 
@@ -113,7 +113,8 @@ test.describe('all configure', function () {
   args = stylus_call.calls[0].args
   assert.equal(1, args.length)
   assert.deepEqual
-    ( { src: PUBLIC_PATH
+    ( { src  : VIEWS_PATH
+      , dest : PUBLIC_PATH
       }
     , args[0]
     )

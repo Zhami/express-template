@@ -23,7 +23,11 @@ app.configure(function(){
   app.use(express.bodyParser())
   app.use(express.methodOverride())
 
-  app.use(require('stylus').middleware({ src: PUBLIC_PATH }))
+  app.use(require('stylus').middleware
+    ( { src  : VIEWS_PATH
+      , dest : PUBLIC_PATH
+      }
+    ))
 
   app.use(express.static(PUBLIC_PATH))
 
