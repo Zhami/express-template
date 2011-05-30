@@ -3,7 +3,6 @@ var express    = require('express')
   , mongoose   = require('mongoose')
   , path       = require('path')
   , RedisStore = require('connect-redis')
-  , common     = require('./common')
   , net        = require('net')
   , repl       = require('repl')
 
@@ -55,24 +54,6 @@ app.configure('production', function(){
   mongoose.connect('mongodb://localhost/test')
 })
 
-// Setup common
-common.setup(__dirname)
-
-common.app      = common.Base.prototype.app      = app
-common.mongoose = common.Base.prototype.mongoose = mongoose
-
-common.BaseRequest.DEFAULT_DATA =
-  { title      : 'Welcome'
-  , title_name : ''
-  }
-
-common.BaseRequest.prototype.setTitle = function (title) {
-  this.data.title      = title + ' - ' + this.data.title
-  this.data.title_name = title
-
-  return this
-}
-
 // Routes
 require('./routes')(app)
 
@@ -80,7 +61,7 @@ require('./routes')(app)
 var repl_server = net.createServer(function (socket) {
   var r = repl.start('express-' + process.pid + '> ', socket)
 
-  r.context.common   = common
+  r.context.common   = require('./common')
   r.context.app      = app
   r.context.mongoose = mongoose
 

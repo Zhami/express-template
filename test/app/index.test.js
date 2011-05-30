@@ -9,7 +9,6 @@ test.requires('express')
 test.requires('mongoose')
 test.requires('path')
 test.requires('connect-redis', { class: 'RedisStore' })
-test.requires('./common', [{ class: 'setup' }, { name: 'common' }, { class: 'Base' }, { class: 'BaseRequest' }])
 test.requires('net')
 test.requires('repl')
 
@@ -39,8 +38,6 @@ test.describe('bootstrap', function () {
   test.expect(test.required.path, 'resolve', 1, [PATH_JOIN], REPL_PATH)
 
   configure_call = test.expect(APP, 'configure', 3)
-
-  test.expect(test.required.setup, 1, [test.context.__dirname])
 
   test.requires('./routes', { class: 'routes' })
   test.expect(test.required.routes, 1, [APP])
@@ -82,22 +79,10 @@ test.describe('bootstrap', function () {
       , ['express-' + test.context.process.pid + '> ', SOCKET]
       , REPL
       )
+    test.requires('./common')
 
     REPL_CB(SOCKET)
   })
-})
-
-test.describe('setTitle', function () {
-  var TITLE = 'TITLE'
-    , THIS  = test.object('this')
-
-  THIS.data =
-    { title: 'test'
-    }
-
-  test.required.BaseRequest.prototype.setTitle.call(THIS, TITLE)
-
-  assert.equal(THIS.data.title, TITLE + ' - test')
 })
 
 test.describe('all configure', function () {
