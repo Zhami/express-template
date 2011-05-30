@@ -12,4 +12,11 @@ module.exports = function (app) {
     ( '/home'
     , load('home')
     )
+
+  var home = c.loadController('home')
+
+  app.error(function (error, request, response, next) {
+    var r = home.setupRequest(request, response, next)
+    r.error(error)
+  })
 }
