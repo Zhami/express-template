@@ -67,3 +67,17 @@ ApplicationError.prototype.__proto__ = Error.prototype
 
 exports.ApplicationError = ApplicationError
 
+var BadRequestError = function BadRequestError (message) {
+  Error.call(this)
+
+  this.name = 'Bad Request'
+  this.code = 400
+
+  this.message = message || 'You have sent a bad request.'
+
+  Error.captureStackTrace(this, arguments.callee)
+}
+
+BadRequestError.prototype.__proto__ = Error.prototype
+
+exports.BadRequestError = BadRequestError
