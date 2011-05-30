@@ -12,6 +12,10 @@ module.exports = function (app) {
     ( '/home'
     , load('home')
     )
+  app.get
+    ( '*'
+    , load('home', 'notFound')
+    )
 
   var home = c.loadController('home')
 

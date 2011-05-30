@@ -18,6 +18,8 @@ test.describe('test routes', function () {
   test.expect(APP, 'get', 1, ['/', ROUTE])
   test.expect(load, 1, ['home'], ROUTE)
   test.expect(APP, 'get', 1, ['/home', ROUTE])
+  test.expect(load, 1, ['home', 'notFound'], ROUTE)
+  test.expect(APP, 'get', 1, ['*', ROUTE])
 
   test.expect(test.required.loadController, 1, ['home'], HOME_C)
 

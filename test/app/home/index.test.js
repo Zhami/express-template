@@ -56,6 +56,19 @@ test.describe('Home#index', function () {
   HOME.index(REQUEST)
 })
 
+test.describe('Home#notFound', function () {
+  var REQUEST = test.object('request')
+    , ERROR   = test.object('error')
+
+  REQUEST.request     = test.object('request')
+  REQUEST.request.url = test.object('url')
+
+  test.expect('new', test.required.NotFoundError, 1, [REQUEST.request.url], ERROR)
+  test.expect(REQUEST, 'error', 1, [ERROR])
+
+  HOME.notFound(REQUEST)
+})
+
 test.describe('HomeRequest', function () {
   var REQUEST  = test.object('request')
     , RESPONSE = test.object('response')

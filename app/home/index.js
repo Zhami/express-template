@@ -23,6 +23,10 @@ Home.prototype.index = function (r) {
   r.render('index')
 }
 
+Home.prototype.notFound = function (r) {
+  r.error(new NotFoundError(r.request.url))
+}
+
 
 // Home requests
 var HomeRequest = function HomeRequest (home, request, response, next) {
