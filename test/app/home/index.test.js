@@ -51,6 +51,7 @@ test.describe('Home#setupRequest', function () {
 test.describe('Home#index', function () {
   var REQUEST = test.object('request')
 
+  test.expect(REQUEST, 'setTitle', 1, ['It is working!'])
   test.expect(REQUEST, 'render', 1, ['index'])
 
   HOME.index(REQUEST)

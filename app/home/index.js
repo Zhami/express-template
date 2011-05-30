@@ -20,6 +20,7 @@ Home.prototype.setupRequest = function (request, response, next) {
 }
 
 Home.prototype.index = function (r) {
+  r.setTitle('It is working!')
   r.render('index')
 }
 
