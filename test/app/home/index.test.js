@@ -83,48 +83,60 @@ test.describe('HomeRequest', function () {
   HOME_REQUEST = new EXPORTS.HomeRequest(HOME, REQUEST, RESPONSE, NEXT)
 
   assert.equal(HOME_REQUEST, base_call.calls[0].context)
+
+  HOME_REQUEST.response = RESPONSE
+})
+
+test.describe('HomeRequest#_renderError', function () {
+  var STRING       = test.object('string')
+    , RENDER_ERROR = test.object('render_error')
+    , ERROR        = test.object('error')
+    , render_call, args, RENDER_CB
+
+  ERROR.code    = test.object('code')
+  ERROR.message = test.object('mesage')
+
+  test.expect(HOME_REQUEST, 'setTitle', 1, [ERROR.message])
+  render_call = test.expect(HOME_REQUEST, 'render', 1)
+
+  HOME_REQUEST._renderError(ERROR)
+
+  args = render_call.calls[0].args
+  assert.equal(4, args.length)
+  assert.equal('error', args[0])
+  assert.deepEqual
+    ( { error : ERROR }
+    , args[1]
+    )
+  RENDER_CB = args[2]
+  assert.equal(true, args[3])
+
+  test.expect(HOME_REQUEST.response, 'send', 1, [STRING, ERROR.code])
+
+  RENDER_CB(null, STRING)
+
+  test.describe('error', function () {
+    test.expect(HOME_REQUEST.response, 'send', 1, ['Error occured during page render.', 500])
+    RENDER_CB(RENDER_ERROR)
+  })
 })
 
 test.describe('HomeRequest#error', function () {
-  var ERROR     = test.object('error')
-    , render_call, args
-  ERROR.message = test.object('message')
-  ERROR.stack   = test.object('stack')
+  var ERROR  = test.object('error')
 
   test.expect('new', test.required.ApplicationError, 1, [ERROR.message], ERROR)
-  render_call = test.expect(HOME_REQUEST, 'render', 1)
+  test.expect(HOME_REQUEST, '_renderError', 1, [ERROR])
 
   HOME_REQUEST.error(ERROR)
-
-  args = render_call.calls[0].args
-  assert.equal(3, args.length)
-  assert.equal('error', args[0])
-  assert.deepEqual
-    ( { error : ERROR
-      }
-    , args[1]
-    )
-  assert.equal(true, args[2])
 
   test.describe('HomeRequest#error known', function () {
     test.expect('new', test.required.ApplicationError, 1, ['MESSAGE'])
 
     var ERROR = new test.required.ApplicationError('MESSAGE')
-      , render_call, args
 
-    render_call = test.expect(HOME_REQUEST, 'render', 1)
+    test.expect(HOME_REQUEST, '_renderError', 1, [ERROR])
 
     HOME_REQUEST.error(ERROR)
-
-    args = render_call.calls[0].args
-    assert.equal(3, args.length)
-    assert.equal('error', args[0])
-    assert.deepEqual
-      ( { error : ERROR
-        }
-      , args[1]
-      )
-    assert.equal(true, args[2])
   })
 })
 
