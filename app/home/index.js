@@ -1,5 +1,6 @@
 var c                = require('../common')
   , e                = require('../errors')
+  , HomeRequest      = require('./request')
   , Base             = c.Base
   , BaseRequest      = c.BaseRequest
   , NotFoundError    = e.NotFoundError
@@ -31,62 +32,4 @@ Home.prototype.index = function (r) {
 // 404 Page
 Home.prototype.notFound = function (r) {
   r.error(new NotFoundError(r.request.url))
-}
-
-
-// Home requests
-var HomeRequest = function HomeRequest (home, request, response, next) {
-  BaseRequest.call(this, home, request, response, next)
-
-  this.data =
-    { title      : 'Welcome'
-    , title_name : ''
-    }
-}
-
-HomeRequest.prototype.__proto__ = BaseRequest.prototype
-
-Home.HomeRequest = HomeRequest
-
-// The request error handler. Renders the error template
-// with a meaningful error object.
-HomeRequest.prototype.error = function (error) {
-  if (  error instanceof NotFoundError
-     || error instanceof ApplicationError
-     || error instanceof BadRequestError) {
-    return this._renderError(error)
-  }
-
-  var err   = new ApplicationError(error.message)
-  err.stack = error.stack
-
-  this._renderError(err)
-}
-
-HomeRequest.prototype._renderError = function (error) {
-  var r = this
-
-  this.setTitle(error.name || 'Application Error')
-
-  return this.render
-    ( 'error'
-    , { error : error }
-    , function (render_error, string) {
-        if (render_error) {
-          return r.response.send('Error occured during page render.', 500)
-        }
-
-        r.response.send(string, error.code || 500)
-      }
-    , true
-    )
-}
-
-// Set the page title.
-// A common variable that gets used on most templates
-HomeRequest.prototype.setTitle = function (title) {
-  this.data.title      = title + ' - ' + this.data.title
-  this.data.title_name = title
-
-  return this
 }
