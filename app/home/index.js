@@ -1,27 +1,15 @@
-var c                = require('../common')
-  , e                = require('../errors')
-  , HomeRequest      = require('./request')
-  , Base             = c.Base
-  , BaseRequest      = c.BaseRequest
-  , NotFoundError    = e.NotFoundError
-  , ApplicationError = e.ApplicationError
-  , BadRequestError  = e.BadRequestError
+var Page          = require('../common').Page
+  , NotFoundError = require('../errors').NotFoundError
 
 // Home page
 var Home = function Home () {
-  Base.call(this, 'home')
+  Page.call(this, 'home')
 }
 
-// Inherit from Base and export
-Home.prototype.__proto__ = Base.prototype
+// Inherit from Page and export
+Home.prototype.__proto__ = Page.prototype
 
 module.exports = Home
-// This gets called on every request to the home controller
-// We overwrite the base request handler as we want to use our
-// own request object with helpers like setTitle.
-Home.prototype.setupRequest = function (request, response, next) {
-  return new HomeRequest(this, request, response, next)
-}
 
 // The home page
 Home.prototype.index = function (r) {
