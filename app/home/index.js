@@ -66,7 +66,7 @@ HomeRequest.prototype.error = function (error) {
 HomeRequest.prototype._renderError = function (error) {
   var r = this
 
-  this.setTitle(error.message || 'Application Error')
+  this.setTitle(error.name || 'Application Error')
 
   return this.render
     ( 'error'

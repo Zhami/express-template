@@ -93,10 +93,10 @@ test.describe('HomeRequest#_renderError', function () {
     , ERROR        = test.object('error')
     , render_call, args, RENDER_CB
 
-  ERROR.code    = test.object('code')
-  ERROR.message = test.object('mesage')
+  ERROR.code = test.object('code')
+  ERROR.name = test.object('mesage')
 
-  test.expect(HOME_REQUEST, 'setTitle', 1, [ERROR.message])
+  test.expect(HOME_REQUEST, 'setTitle', 1, [ERROR.name])
   render_call = test.expect(HOME_REQUEST, 'render', 1)
 
   HOME_REQUEST._renderError(ERROR)
