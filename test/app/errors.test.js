@@ -26,7 +26,7 @@ test.describe('NotFoundError', function () {
   assert.equal(ERROR, args[0])
   assert.equal(EXPORTS.NotFoundError, args[1])
 
-  assert.equal(ERROR.message, '"PATH" could not be found.')
+  assert.equal(ERROR.message, '"PATH" was not found.')
 })
 
 test.describe('BadRequestError', function () {

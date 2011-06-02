@@ -54,6 +54,9 @@ app.configure('production', function(){
   mongoose.connect('mongodb://localhost/test')
 })
 
+// Models for mongoose
+require('./models')
+
 // Routes
 require('./routes')(app)
 

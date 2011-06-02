@@ -14,6 +14,6 @@
   , "stylus"           : "0.x"
   }
 , "scripts"            :
-  { "test"             : "node-far test/ \".*\\.test\\.js$\""
+  { "test"             : "find test -name *.test.js -exec echo {} \\; -exec node {} \\;"
   }
 }

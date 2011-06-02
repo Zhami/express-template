@@ -39,6 +39,8 @@ test.describe('bootstrap', function () {
 
   configure_call = test.expect(APP, 'configure', 3)
 
+  test.requires('./models')
+
   test.requires('./routes', { class: 'routes' })
   test.expect(test.required.routes, 1, [APP])
 

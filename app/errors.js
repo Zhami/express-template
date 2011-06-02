@@ -2,14 +2,14 @@
 var NotFoundError = function NotFoundError (path) {
   Error.call(this)
 
-  this.name  = 'Not Found'
+  this.name  = 'Page Not Found'
   this.code  = 404
   this.stack = Error.captureStackTrace(this, arguments.callee)
 
   if (path) {
-    this.message = '"' + path + '" could not be found.'
+    this.message = '"' + path + '" was not found.'
   } else {
-    this.message = 'Page not found'
+    this.message = 'The page you were looking for was not found.'
   }
 }
 
