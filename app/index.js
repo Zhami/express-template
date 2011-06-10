@@ -1,14 +1,15 @@
 // Module dependencies.
-var express    = require('express')
-  , mongoose   = require('mongoose')
-  , path       = require('path')
-  , RedisStore = require('connect-redis')
-  , net        = require('net')
-  , repl       = require('repl')
+var express       = require('express')
+  , mongoose      = require('mongoose')
+  , path          = require('path')
+  , connect_redis = require('connect-redis')
+  , net           = require('net')
+  , repl          = require('repl')
 
 require('express-mongoose')
 
 var app         = module.exports = express.createServer()
+  , RedisStore  = connect_redis(express)
   , VIEWS_PATH  = path.resolve(path.join(__dirname, '..', 'views'))
   , PUBLIC_PATH = path.resolve(path.join(__dirname, '..', 'public'))
   , REPL_PATH   = path.resolve(path.join(__dirname, '..', 'repl'))

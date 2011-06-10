@@ -8,7 +8,7 @@ test.context.process   = { pid : 'PID' }
 test.requires('express')
 test.requires('mongoose')
 test.requires('path')
-test.requires('connect-redis', { class: 'RedisStore' })
+test.requires('connect-redis', { class: 'connect_redis' })
 test.requires('net')
 test.requires('repl')
 
@@ -16,6 +16,7 @@ var APP         = test.object('app')
   , VIEWS_PATH  = 'VIEWS_PATH'
   , PUBLIC_PATH = 'PUBLIC_PATH'
   , REPL_PATH   = 'REPL_PATH'
+  , REDIS_STORE = test.function('RedisStore')
   , ALL_CB, DEV_CB, PROD_CB
 
 APP.router = test.object('router')
@@ -27,6 +28,8 @@ test.describe('bootstrap', function () {
     , REPL_CB
 
   test.expect(test.required.express, 'createServer', 1, [], APP)
+  test.expect(test.required.connect_redis, 1, [test.required.express])
+    .andReturn(REDIS_STORE)
 
   test.expect(test.required.path, 'join', 1, [test.context.__dirname, '..', 'views'], PATH_JOIN)
   test.expect(test.required.path, 'resolve', 1, [PATH_JOIN], VIEWS_PATH)
@@ -123,11 +126,11 @@ test.describe('all configure', function () {
 })
 
 test.describe('dev configure', function () {
-  var PLUGIN      = test.object('plugin')
-    , REDIS_STORE = test.object('redis_store')
+  var PLUGIN        = test.object('plugin')
+    , REDIS_STORE_I = test.object('redis_store')
     , session_call, args
 
-  test.expect('new', test.required.RedisStore, 1, [], REDIS_STORE)
+  test.expect('new', REDIS_STORE, 1, [], REDIS_STORE_I)
 
   test.expect(test.required.express, 'cookieParser', 1, [], PLUGIN)
   test.expect(APP, 'use', 1, [PLUGIN])
@@ -143,18 +146,18 @@ test.describe('dev configure', function () {
   assert.equal(1, args.length)
   assert.deepEqual
     ( { secret : 'test'
-      , store  : REDIS_STORE
+      , store  : REDIS_STORE_I
       }
     , args[0]
     )
 })
 
 test.describe('prod configure', function () {
-  var PLUGIN      = test.object('plugin')
-    , REDIS_STORE = test.object('redis_store')
+  var PLUGIN        = test.object('plugin')
+    , REDIS_STORE_I = test.object('redis_store')
     , session_call, args
 
-  test.expect('new', test.required.RedisStore, 1, [], REDIS_STORE)
+  test.expect('new', REDIS_STORE, 1, [], REDIS_STORE_I)
 
   test.expect(test.required.express, 'cookieParser', 1, [], PLUGIN)
   test.expect(APP, 'use', 1, [PLUGIN])
@@ -170,7 +173,7 @@ test.describe('prod configure', function () {
   assert.equal(1, args.length)
   assert.deepEqual
     ( { secret : 'test'
-      , store  : REDIS_STORE
+      , store  : REDIS_STORE_I
       }
     , args[0]
     )

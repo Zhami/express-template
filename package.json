@@ -1,9 +1,8 @@
 { "name"               : "test"
-, "version"            : "0.1.0"
+, "version"            : "0.1.1"
 , "private"            : true
 , "dependencies"       :
   { "express"          : "2.3.x"
-  , "connect"          : "1.4.x"
   , "connect-redis"    : "1.x"
   , "express-aid"      : "0.1.x >=0.1.6"
   , "mongoose"         : "1.x"
