@@ -63,5 +63,6 @@ var repl_server = net.createServer(function (socket) {
   r.context.common = require('./common')
   r.context.app    = app
   r.context.db     = db
+  r.context.async  = require('async-array').async
 
 }).listen(REPL_PATH + '/' + process.pid + '.sock')
