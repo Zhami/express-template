@@ -6,11 +6,11 @@ test.context.__dirname = test.object('dirname')
 test.context.process   = { pid : 'PID' }
 
 test.requires('express')
-test.requires('mongoose')
 test.requires('path')
 test.requires('connect-redis', { class: 'connect_redis' })
 test.requires('net')
 test.requires('repl')
+test.requires('./db', { name : 'db' })
 
 var APP         = test.object('app')
   , VIEWS_PATH  = 'VIEWS_PATH'
@@ -41,11 +41,6 @@ test.describe('bootstrap', function () {
   test.expect(test.required.path, 'resolve', 1, [PATH_JOIN], REPL_PATH)
 
   configure_call = test.expect(APP, 'configure', 3)
-
-  test.requires('./models')
-
-  test.requires('./routes', { class: 'routes' })
-  test.expect(test.required.routes, 1, [APP])
 
   create_server_call = test.expect(test.required.net, 'createServer', 1, null, REPL_SERVER)
   test.expect(REPL_SERVER, 'listen', 1, [REPL_PATH + '/' + test.context.process.pid + '.sock'])
@@ -113,6 +108,9 @@ test.describe('all configure', function () {
 
   test.expect(APP, 'use', 1, [APP.router])
 
+  test.requires('./config/routes', { class : 'routes' })
+  test.expect(test.required.routes, 1, [APP])
+
   ALL_CB()
 
   args = stylus_call.calls[0].args
@@ -138,7 +136,7 @@ test.describe('dev configure', function () {
   session_call = test.expect(test.required.express, 'session', 1, null, PLUGIN)
   test.expect(APP, 'use', 1, [PLUGIN])
 
-  test.expect(test.required.mongoose, 'connect', 1, ['mongodb://localhost/test'])
+  test.expect(test.required.db, 'open', 1, ['mongodb://localhost/test'])
 
   DEV_CB()
 
@@ -165,7 +163,7 @@ test.describe('prod configure', function () {
   session_call = test.expect(test.required.express, 'session', 1, null, PLUGIN)
   test.expect(APP, 'use', 1, [PLUGIN])
 
-  test.expect(test.required.mongoose, 'connect', 1, ['mongodb://localhost/test'])
+  test.expect(test.required.db, 'open', 1, ['mongodb://localhost/test'])
 
   PROD_CB()
 

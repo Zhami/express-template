@@ -1,8 +1,8 @@
-require('../common')
+require('../../common')
 
-var test = microtest.module('app/routes.js')
+var test = microtest.module('app/config/routes.js')
 
-test.requires('./common', [{ class : 'load' }, { class : 'loadController' }])
+test.requires('../common', [{ class : 'load' }, { class : 'loadController' }])
 
 var load = test.required.load
   , APP  = test.object('app')

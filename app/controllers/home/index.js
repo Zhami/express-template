@@ -1,5 +1,6 @@
-var Page          = require('../common').Page
-  , NotFoundError = require('../errors').NotFoundError
+var common        = require('../../common')
+  , Page          = common.Page
+  , NotFoundError = common.NotFoundError
 
 // Home page
 var Home = function Home () {

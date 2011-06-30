@@ -1,12 +1,10 @@
 // Module dependencies.
 var express       = require('express')
-  , mongoose      = require('mongoose')
   , path          = require('path')
   , connect_redis = require('connect-redis')
   , net           = require('net')
   , repl          = require('repl')
-
-require('express-mongoose')
+  , db            = require('./db')
 
 var app         = module.exports = express.createServer()
   , RedisStore  = connect_redis(express)
@@ -33,6 +31,9 @@ app.configure(function(){
   app.use(express.static(PUBLIC_PATH))
 
   app.use(app.router)
+
+  // Routes
+  require('./config/routes')(app)
 })
 
 app.configure('development', function(){
@@ -42,7 +43,7 @@ app.configure('development', function(){
   app.use(express.session({ secret: 'test', store: redis_store }))
 
   // Local mongoose server
-  mongoose.connect('mongodb://localhost/test')
+  db.open('mongodb://localhost/test')
 })
 
 app.configure('production', function(){
@@ -52,21 +53,15 @@ app.configure('production', function(){
   app.use(express.session({ secret: 'test', store: redis_store }))
 
   // Local mongoose server
-  mongoose.connect('mongodb://localhost/test')
+  db.open('mongodb://localhost/test')
 })
-
-// Models for mongoose
-require('./models')
-
-// Routes
-require('./routes')(app)
 
 // REPL
 var repl_server = net.createServer(function (socket) {
   var r = repl.start('express-' + process.pid + '> ', socket)
 
-  r.context.common   = require('./common')
-  r.context.app      = app
-  r.context.mongoose = mongoose
+  r.context.common = require('./common')
+  r.context.app    = app
+  r.context.db     = db
 
 }).listen(REPL_PATH + '/' + process.pid + '.sock')

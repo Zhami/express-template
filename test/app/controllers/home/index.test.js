@@ -1,9 +1,8 @@
-require('../../common')
+require('../../../common')
 
-var test = microtest.module('app/home/index.js')
+var test = microtest.module('app/controllers/home/index.js')
 
-test.requires('../common', [{ class : 'Page' }])
-test.requires('../errors', [{ class : 'NotFoundError' }])
+test.requires('../../common', [{ class : 'Page' }, { class : 'NotFoundError' }])
 
 var EXPORTS, HOME
 

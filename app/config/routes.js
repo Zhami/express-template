@@ -1,4 +1,4 @@
-var c    = require('./common')
+var c    = require('../common')
   , load = c.load
 
 // Routing
