@@ -31,10 +31,10 @@ test.describe('bootstrap', function () {
   test.expect(test.required.connect_redis, 1, [test.required.express])
     .andReturn(REDIS_STORE)
 
-  test.expect(test.required.path, 'join', 1, [test.context.__dirname, '..', 'views'], PATH_JOIN)
+  test.expect(test.required.path, 'join', 1, [test.context.__dirname, 'views'], PATH_JOIN)
   test.expect(test.required.path, 'resolve', 1, [PATH_JOIN], VIEWS_PATH)
 
-  test.expect(test.required.path, 'join', 1, [test.context.__dirname, '..', 'public'], PATH_JOIN)
+  test.expect(test.required.path, 'join', 1, [test.context.__dirname, 'public'], PATH_JOIN)
   test.expect(test.required.path, 'resolve', 1, [PATH_JOIN], PUBLIC_PATH)
 
   test.expect(test.required.path, 'join', 1, [test.context.__dirname, '..', 'repl'], PATH_JOIN)
@@ -80,6 +80,7 @@ test.describe('bootstrap', function () {
       , REPL
       )
     test.requires('./common')
+    test.requires('async-array')
 
     REPL_CB(SOCKET)
   })

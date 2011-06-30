@@ -8,8 +8,8 @@ var express       = require('express')
 
 var app         = module.exports = express.createServer()
   , RedisStore  = connect_redis(express)
-  , VIEWS_PATH  = path.resolve(path.join(__dirname, '..', 'views'))
-  , PUBLIC_PATH = path.resolve(path.join(__dirname, '..', 'public'))
+  , VIEWS_PATH  = path.resolve(path.join(__dirname, 'views'))
+  , PUBLIC_PATH = path.resolve(path.join(__dirname, 'public'))
   , REPL_PATH   = path.resolve(path.join(__dirname, '..', 'repl'))
 
 // Configuration
