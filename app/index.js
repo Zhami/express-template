@@ -5,6 +5,7 @@ var express       = require('express')
   , net           = require('net')
   , repl          = require('repl')
   , db            = require('./db')
+  , common        = require('./common')
 
 var app         = module.exports = express.createServer()
   , RedisStore  = connect_redis(express)
@@ -60,7 +61,7 @@ app.configure('production', function(){
 var repl_server = net.createServer(function (socket) {
   var r = repl.start('express-' + process.pid + '> ', socket)
 
-  r.context.common = require('./common')
+  r.context.common = common
   r.context.app    = app
   r.context.db     = db
   r.context.async  = require('async-array').async

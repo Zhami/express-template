@@ -11,6 +11,7 @@ test.requires('connect-redis', { class: 'connect_redis' })
 test.requires('net')
 test.requires('repl')
 test.requires('./db', { name : 'db' })
+test.requires('./common', { name : 'common' })
 
 var APP         = test.object('app')
   , VIEWS_PATH  = 'VIEWS_PATH'
@@ -79,7 +80,6 @@ test.describe('bootstrap', function () {
       , ['express-' + test.context.process.pid + '> ', SOCKET]
       , REPL
       )
-    test.requires('./common')
     test.requires('async-array')
 
     REPL_CB(SOCKET)
