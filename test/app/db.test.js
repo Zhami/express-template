@@ -1,14 +1,21 @@
 require('../common')
 
-var test = microtest.module('app/db.js')
+var test       = createTest('../app/db')
+  , REQUIRE    = test.function('require')
+  , M_MONGOOSE = test.object('mongoose')
+  , OPTIONS    =
+    { locals    :
+      { require : REQUIRE
+      }
+    }
 
-test.requires('mongoose')
-test.requires('express-mongoose')
+test.expect(REQUIRE, 1, ['mongoose'], M_MONGOOSE)
+test.expect(REQUIRE, 1, ['express-mongoose'])
 
 var CONNECTION = test.object('connection')
 
-test.describe('bootstrap', function () {
-  test.expect(test.required.mongoose, 'createConnection', 1, [], CONNECTION)
+;(function bootstrap () {
+  test.expect(M_MONGOOSE, 'createConnection', 1, [], CONNECTION)
 
-  assert.equal(CONNECTION, test.compile())
-})
+  assert.equal(CONNECTION, test.compile(OPTIONS).exports)
+})()

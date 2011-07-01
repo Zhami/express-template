@@ -1,15 +1,22 @@
 require('../../common')
 
-var test = microtest.module('app/config/routes.js')
+var test     = createTest('../app/config/routes')
+  , M_COMMON = test.object('common')
+  , OPTIONS  =
+    { requires :
+      { '../common' : M_COMMON
+      }
+    }
 
-test.requires('../common', [{ class : 'load' }, { class : 'loadController' }])
+M_COMMON.load           = test.function('load')
+M_COMMON.loadController = test.function('loadController')
 
-var load = test.required.load
+var load = M_COMMON.load
   , APP  = test.object('app')
 
-EXPORTS = test.compile()
+EXPORTS = test.compile(OPTIONS).exports
 
-test.describe('test routes', function () {
+;(function createsRoutes () {
   var ROUTE  = test.object('route')
     , HOME_C = test.object('home')
     , args, error_call, ERROR_CB
@@ -21,7 +28,7 @@ test.describe('test routes', function () {
   test.expect(load, 1, ['home', 'notFound'], ROUTE)
   test.expect(APP, 'get', 1, ['*', ROUTE])
 
-  test.expect(test.required.loadController, 1, ['home'], HOME_C)
+  test.expect(M_COMMON.loadController, 1, ['home'], HOME_C)
 
   error_call = test.expect(APP, 'error', 1)
 
@@ -32,7 +39,7 @@ test.describe('test routes', function () {
 
   ERROR_CB = args[0]
 
-  test.describe('general error', function () {
+  ;(function error () {
     var ERROR    = test.object('error')
       , REQUEST  = test.object('request')
       , RESPONSE = test.object('response')
@@ -42,5 +49,5 @@ test.describe('test routes', function () {
     test.expect(REQUEST, 'error', 1, [ERROR])
 
     ERROR_CB(ERROR, REQUEST, RESPONSE, NEXT)
-  })
-})
+  })()
+})()

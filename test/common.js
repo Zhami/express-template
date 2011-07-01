@@ -1,4 +1,15 @@
-global.microtest = require('microtest')
 global.assert    = require('assert')
-global.fs        = require('fs')
-global.path      = require('path')
+
+var fake    = require('fake')
+  , sandbox = require
+    (   '../node_modules/sandboxed-module/'
+      + 'lib/sandboxed_module'
+    )
+
+global.createTest = function (module) {
+  var test = fake.create()
+  test.compile = function (options) {
+    return sandbox.load(module, options)
+  }
+  return test
+}
