@@ -17,5 +17,6 @@
 , "scripts"            :
   { "test"             : "find test -name *.test.js -exec echo {} \\; -exec node {} \\;"
   , "install"          : "mkdir -p repl pids logs"
+  , "start"            : "node server.js"
   }
 }
