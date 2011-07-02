@@ -8,8 +8,3 @@ exports = module.exports = aid.createAid(
   , mongoose    : db
   }
 )
-
-exports.PageRequest.DEFAULT_DATA =
-  { title      : 'Welcome'
-  , title_name : ''
-  }

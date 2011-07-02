@@ -11,6 +11,7 @@ var test = createTest('../app/config/common')
 var M_EXPRESS = test.object('express')
 
 test.expect(REQUIRE, 1, ['express'], M_EXPRESS)
+test.expect(REQUIRE, 1, ['../common'], { PageRequest : {} })
 
 var APP         = test.object('app')
   , VIEWS_PATH  = 'VIEWS_PATH'
