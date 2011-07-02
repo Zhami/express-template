@@ -14,12 +14,16 @@ M_COMMON.loadController = test.function('loadController')
 var load = M_COMMON.load
   , APP  = test.object('app')
 
+APP.router = test.object('router')
+
 EXPORTS = test.compile(OPTIONS).exports
 
 ;(function createsRoutes () {
   var ROUTE  = test.object('route')
     , HOME_C = test.object('home')
     , args, error_call, ERROR_CB
+
+  test.expect(APP, 'use', 1, [APP.router])
 
   test.expect(load, 1, ['home'], ROUTE)
   test.expect(APP, 'get', 1, ['/', ROUTE])

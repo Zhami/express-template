@@ -14,26 +14,22 @@ var test = createTest('../app')
 
 var M_EXPRESS = test.object('express')
   , M_PATH    = test.object('path')
-  , M_CREDIS  = test.function('credis')
   , M_NET     = test.object('net')
   , M_REPL    = test.object('repl')
-  , M_DB      = test.object('db')
   , M_COMMON  = test.object('common')
+  , M_DB      = test.object('./db')
+  , M_UTIL    = test.object('util')
 
 test.expect(REQUIRE, 1, ['express'], M_EXPRESS)
 test.expect(REQUIRE, 1, ['path'], M_PATH)
-test.expect(REQUIRE, 1, ['connect-redis'])
-  .andReturn(M_CREDIS)
 test.expect(REQUIRE, 1, ['net'], M_NET)
 test.expect(REQUIRE, 1, ['repl'], M_REPL)
-test.expect(REQUIRE, 1, ['./db'], M_DB)
 test.expect(REQUIRE, 1, ['./common'], M_COMMON)
+test.expect(REQUIRE, 1, ['./db'], M_DB)
+test.expect(REQUIRE, 1, ['util'], M_UTIL)
 
 var APP         = test.object('app')
-  , VIEWS_PATH  = 'VIEWS_PATH'
-  , PUBLIC_PATH = 'PUBLIC_PATH'
   , REPL_PATH   = 'REPL_PATH'
-  , REDIS_STORE = test.function('RedisStore')
   , ALL_CB, DEV_CB, PROD_CB
 
 APP.router = test.object('router')
@@ -45,14 +41,12 @@ APP.router = test.object('router')
     , REPL_CB
 
   test.expect(M_EXPRESS, 'createServer', 1, [], APP)
-  test.expect(M_CREDIS, 1, [M_EXPRESS])
-    .andReturn(REDIS_STORE)
 
   test.expect(M_PATH, 'join', 1, [DIRNAME, 'views'], PATH_JOIN)
-  test.expect(M_PATH, 'resolve', 1, [PATH_JOIN], VIEWS_PATH)
+  test.expect(M_PATH, 'resolve', 1, [PATH_JOIN])
 
   test.expect(M_PATH, 'join', 1, [DIRNAME, 'public'], PATH_JOIN)
-  test.expect(M_PATH, 'resolve', 1, [PATH_JOIN], PUBLIC_PATH)
+  test.expect(M_PATH, 'resolve', 1, [PATH_JOIN])
 
   test.expect(M_PATH, 'join', 1, [DIRNAME, '..', 'repl'], PATH_JOIN)
   test.expect(M_PATH, 'resolve', 1, [PATH_JOIN], REPL_PATH)
@@ -103,96 +97,36 @@ APP.router = test.object('router')
 })()
 
 ;(function allConfigure () {
-  var PLUGIN   = test.object('plugin')
-    , M_STYLUS = test.object('stylus')
+  var M_COMMON = test.function('common')
     , M_ROUTES = test.function('routes')
-    , args
 
-  test.expect(APP, 'set', 1, ['views', VIEWS_PATH])
-  test.expect(APP, 'set', 1, ['view engine', 'jade'])
-
-  test.expect(M_EXPRESS, 'logger', 1, [], PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-  test.expect(M_EXPRESS, 'bodyParser', 1, [], PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-  test.expect(M_EXPRESS, 'methodOverride', 1, [], PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-
-  test.expect(REQUIRE, 1, ['stylus'], M_STYLUS)
-  stylus_call = test.expect(M_STYLUS, 'middleware', 1, null, PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-
-  test.expect(M_EXPRESS, 'static', 1, [PUBLIC_PATH], PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-
-  test.expect(APP, 'use', 1, [APP.router])
+  test.expect(REQUIRE, 1, ['./config/common'])
+    .andReturn(M_COMMON)
+  test.expect(M_COMMON, 1, [APP])
 
   test.expect(REQUIRE, 1, ['./config/routes'])
     .andReturn(M_ROUTES)
   test.expect(M_ROUTES, 1, [APP])
 
   ALL_CB()
-
-  args = stylus_call.calls[0].args
-  assert.equal(1, args.length)
-  assert.deepEqual
-    ( { src  : VIEWS_PATH
-      , dest : PUBLIC_PATH
-      }
-    , args[0]
-    )
 })()
 
 ;(function devConfigure () {
-  var PLUGIN        = test.object('plugin')
-    , REDIS_STORE_I = test.object('redis_store')
-    , session_call, args
+  var M_DEV = test.function('prod')
 
-  test.expect('new', REDIS_STORE, 1, [], REDIS_STORE_I)
-
-  test.expect(M_EXPRESS, 'cookieParser', 1, [], PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-
-  session_call = test.expect(M_EXPRESS, 'session', 1, null, PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-
-  test.expect(M_DB, 'open', 1, ['mongodb://localhost/test'])
+  test.expect(REQUIRE, 1, ['./config/development'])
+    .andReturn(M_DEV)
+  test.expect(M_DEV, 1, [APP])
 
   DEV_CB()
-
-  args = session_call.calls[0].args
-  assert.equal(1, args.length)
-  assert.deepEqual
-    ( { secret : 'test'
-      , store  : REDIS_STORE_I
-      }
-    , args[0]
-    )
 })()
 
 ;(function prodConfigure () {
-  var PLUGIN        = test.object('plugin')
-    , REDIS_STORE_I = test.object('redis_store')
-    , session_call, args
+  var M_PROD = test.function('prod')
 
-  test.expect('new', REDIS_STORE, 1, [], REDIS_STORE_I)
-
-  test.expect(M_EXPRESS, 'cookieParser', 1, [], PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-
-  session_call = test.expect(M_EXPRESS, 'session', 1, null, PLUGIN)
-  test.expect(APP, 'use', 1, [PLUGIN])
-
-  test.expect(M_DB, 'open', 1, ['mongodb://localhost/test'])
+  test.expect(REQUIRE, 1, ['./config/production'])
+    .andReturn(M_PROD)
+  test.expect(M_PROD, 1, [APP])
 
   PROD_CB()
-
-  args = session_call.calls[0].args
-  assert.equal(1, args.length)
-  assert.deepEqual
-    ( { secret : 'test'
-      , store  : REDIS_STORE_I
-      }
-    , args[0]
-    )
 })()

@@ -2,3 +2,4 @@ node_modules/
 pids/
 logs/
 repl/
+npm-debug.log

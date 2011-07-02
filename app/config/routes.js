@@ -3,6 +3,8 @@ var c    = require('../common')
 
 // Routing
 module.exports = function (app) {
+  app.use(app.router)
+
   // Homepage
   app.get
     ( '/'
